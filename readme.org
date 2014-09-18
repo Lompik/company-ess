@@ -1,0 +1,24 @@
+#+TITLE company-mode ESS completion backend
+
+This a tentative support for ESS completion for company-mode, based on the same code used in =ess-r-d.el= for auto-complete.
+
+* Features
+  - Complete R objects/args based on =.ess_get_completions= functions defined by ESS
+  - Support for company-mode powered documentation using the =F1= key
+  - Support for object annotations using R's =typeof= function. (truncated to 3 first character)
+
+* Issues
+  - Moving between candidates using =M-n= and =M-p= is very slow compared to =company-elisp= (for example)
+  - objects that contains spaces will show annotation as =nil=. The completion engine return the list of completion without =''=.
+  - Documentation buffer comes with a list of shortcuts (?)
+
+* Usage 
+  1. Download
+  2. Run:
+#+BEGIN_SRC elisp
+(require 'company-ess)
+#+END_SRC
+
+
+Version history: 
+  - <2014-09-17 Wed 21:43> 0.0.1 - Initial release
