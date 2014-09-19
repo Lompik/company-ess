@@ -80,7 +80,8 @@
              (get-process ess-local-process-name))
 					;(buffer-substring-no-properties (ess-ac-start) (point))
     (let ((start (or (ess-company-start-args)  (ess-symbol-start))))
-      (buffer-substring-no-properties start (point)))))
+      (when start
+	(buffer-substring-no-properties start (point))))))
 
 					;(company-grab-symbol)
 
@@ -106,11 +107,15 @@
     (prefix (ess-company-start))
     (candidates (ess-company-candidates arg))
     (doc-buffer (ess-company-create-doc-buffer arg))
-    (annotation (ess-R-get-typeof arg))
+    ;(meta (funcall ess-eldoc-function) )
+    ;(annotation (ess-R-get-typeof arg))
     (sorted t) ; get arguments on top of the list
     (duplicates nil)
     ))
 
+;(add-hook 'ess-mode-hook (lambda ()
+;                          (set (make-local-variable 'company-backends) '(company-ess))
+;                          (company-mode)))
 
 (add-to-list 'company-backends 'company-ess-backend)
 
@@ -118,5 +123,5 @@
 ; FIXME: Is this required ?
 
 
-(provide 'company-ESS)
+(provide 'company-ess)
 ;;; company-ESS.el ends here

@@ -5,12 +5,11 @@ This a tentative support for ESS completion for company-mode, based on the same 
 * Features
   - Complete R objects/args based on =.ess_get_completions= functions defined by ESS
   - Support for company-mode powered documentation using the =F1= key
-  - Support for object annotations using R's =typeof= function. (truncated to 3 first character)
+  - [Disabled] Support for object annotations using R's =typeof= function. (truncated to 3 first character). Moving between candidates using =M-n= and =M-p= is very slow as =company-mode= calls the annotation function each movement.
 
 * Issues
-  - Moving between candidates using =M-n= and =M-p= is very slow compared to =company-elisp= (for example)
   - objects that contains spaces will show annotation as =nil=. The completion engine return the list of completion without =''=.
-  - Documentation buffer comes with a list of shortcuts (?)
+  - Documentation buffer comes ESS .. with a list of shortcuts
 
 * Usage 
   1. Download
@@ -22,3 +21,4 @@ This a tentative support for ESS completion for company-mode, based on the same 
 
 Version history: 
   - <2014-09-17 Wed 21:43> 0.0.1 - Initial release
+  - <2014-09-18 Thu 23:38> 0.0.2 - Fixes speed issue 
