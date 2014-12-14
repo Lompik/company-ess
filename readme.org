@@ -1,9 +1,13 @@
-#+TITLE company-mode ESS completion backend
+#+TITLE: company-mode ESS completion backend
 
 This a tentative support for ESS completion for company-mode, based on the same code used in =ess-r-d.el= for auto-complete.
 
 * Features
   - Complete R objects/args based on =.ess_get_completions= functions defined by ESS
+#+CAPTION: functions conpletion example
+[[./img/args.png]]
+#+CAPTION: arguments conpletion example
+[[./img/functions.png]]
   - Support for company-mode powered documentation using the =F1= key
   - [Disabled] Support for object annotations using R's =typeof= function. (truncated to 3 first character). Moving between candidates using =M-n= and =M-p= is very slow as =company-mode= calls the annotation function each movement.
 
@@ -13,9 +17,21 @@ This a tentative support for ESS completion for company-mode, based on the same 
 
 * Usage 
   1. Download
+     - Currently in the process of creating a MELPA package 
   2. Run:
 #+BEGIN_SRC elisp
 (require 'company-ess)
+
+; Enabling the backend :
+; Globally - company ess-backend checks ess mode 
+(add-to-list 'company-backends 'company-ess-backend)
+
+; OR locally to ess mode
+;(add-hook 'ess-mode-hook (lambda ()
+;                          (set (make-local-variable 'company-backends) '(company-ess))
+;                          (company-mode)))
+
+
 #+END_SRC
 
 

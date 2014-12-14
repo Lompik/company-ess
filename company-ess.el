@@ -31,9 +31,10 @@
 (require 'ess)
 
 
+;;; INTERNALS
+
 (defun ess-R-my-get-rcompletions (symb)
-  "Call R internal completion utilities (rcomp) for possible completions.
-"
+  "Call R internal completion utilities (rcomp) for possible completions."
   (let* (
 	 
          ;; (opts1 (if no-args "op<-rc.options(args=FALSE)" ""))
@@ -85,20 +86,23 @@
 
 					;(company-grab-symbol)
 
+
 (defun ess-R-get-typeof (symb)
-  "Call R internal completion utilities (typeof) for possible completions.
-"
+  "Call R internal completion utilities (typeof) for possible completions."
   (let* ( ;; (opts1 (if no-args "op<-rc.options(args=FALSE)" ""))
          ;; (opts2 (if no-args "rc.options(op)" ""))
          (comm (format "typeof(%s)\n"
 		       symb)))
     (format " %.3s" (car (ess-get-words-from-vector comm)))))
 
+
 (defun ess-company-create-doc-buffer (syms)
   (let ((doc (ess-ac-help syms)))
     (company-doc-buffer doc)))
 
+;;; BACKENDS
 
+;;;###autoload
 (defun company-ess-backend (command &optional arg &rest ignored)
   (interactive (list 'interactive))
 
@@ -113,11 +117,6 @@
     (duplicates nil)
     ))
 
-;(add-hook 'ess-mode-hook (lambda ()
-;                          (set (make-local-variable 'company-backends) '(company-ess))
-;                          (company-mode)))
-
-(add-to-list 'company-backends 'company-ess-backend)
 
 ;(remove-hook 'completion-at-point-functions 'ess-R-object-completion) 
 ; FIXME: Is this required ?
