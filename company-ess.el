@@ -1,9 +1,12 @@
-;;; company-ESS.el --- R Completion Backend for Company-mode  -*- lexical-binding: t; -*-
+;;; company-ess.el --- R/ess Completion Backend for company-mode  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2014  
 
-;; Author:  <Lompik@ORION>
-;; Keywords: extensions, matching
+;; Author:  Lompik
+;; Keywords: completion, ess
+;; Version: 0.0.2
+;; URL: https://github.com/Lompik/company-ess
+;; Package-Requires: ((company "0.8.0") (ess "13.05") (cl-lib "0.5") (emacs "24.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -18,33 +21,24 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;;; Commentary:
-
-;; 
+;;; Commentary: R/ess Completion Backend for company-mode
 
 ;;; Code:
-
-
 
 (require 'cl-lib)
 (require 'company)
 (require 'ess)
 
-
 ;;; INTERNALS
 
-(defun ess-R-my-get-rcompletions (symb)
+(defun company-ess-get-compfromr (symb)
   "Call R internal completion utilities (rcomp) for possible completions."
-  (let* (
-	 
-         ;; (opts1 (if no-args "op<-rc.options(args=FALSE)" ""))
-         ;; (opts2 (if no-args "rc.options(op)" ""))
-         (comm (format ".ess_get_completions(\"%s\", %d)\n"
+  (let* ((comm (format ".ess_get_completions(\"%s\", %d)\n"
 		       (ess-quote-special-chars symb)
 		       (length symb))))
     (ess-get-words-from-vector comm)))
 
-(defun ess-company-args (symb)
+(defun company-ess-args (symb)
   "Get the args of the function when inside parentheses."
   (when  ess--funname.start ;; stored by a coll to ess-ac-start-args
     (let ((args (nth 2 (ess-function-arguments (car ess--funname.start))))
@@ -55,8 +49,8 @@
 
 
 (defun ess-company-candidates ( symb)
-  (let ((args (ess-company-args symb))
-	(comps (cdr (ess-R-my-get-rcompletions symb))))
+  (let ((args (company-ess-args symb))
+	(comps (cdr (company-ess-get-compfromr symb))))
     
     (if args
 	(setq comps (append
@@ -66,7 +60,7 @@
 		     comps)))
     comps))
 
-(defun ess-company-start-args () ;SAme as ess-ac-start-args
+(defun company-ess-start-args () ;Same as ess-ac-start-args
   "Get initial position for args completion"
   (when (and ess-local-process-name
              (not (eq (get-text-property (point) 'face) 'font-lock-string-face)))
@@ -76,27 +70,22 @@
         (ess-symbol-start)))))
 
 
-(defun ess-company-start ()
+(defun company-ess-start ()
   (when (and ess-local-process-name
              (get-process ess-local-process-name))
-					;(buffer-substring-no-properties (ess-ac-start) (point))
-    (let ((start (or (ess-company-start-args)  (ess-symbol-start))))
+    (let ((start (or (company-ess-start-args)  (ess-symbol-start))))
       (when start
 	(buffer-substring-no-properties start (point))))))
 
-					;(company-grab-symbol)
 
-
-(defun ess-R-get-typeof (symb)
+(defun company-ess-get-typeof (symb)
   "Call R internal completion utilities (typeof) for possible completions."
-  (let* ( ;; (opts1 (if no-args "op<-rc.options(args=FALSE)" ""))
-         ;; (opts2 (if no-args "rc.options(op)" ""))
-         (comm (format "typeof(%s)\n"
+  (let* ((comm (format "typeof(%s)\n"
 		       symb)))
     (format " %.3s" (car (ess-get-words-from-vector comm)))))
 
 
-(defun ess-company-create-doc-buffer (syms)
+(defun company-ess-create-doc-buffer (syms)
   (let ((doc (ess-ac-help syms)))
     (company-doc-buffer doc)))
 
@@ -108,18 +97,14 @@
 
   (cl-case command
     (interactive (company-begin-backend 'company-ess-backend))
-    (prefix (ess-company-start))
+    (prefix (company-ess-start))
     (candidates (ess-company-candidates arg))
-    (doc-buffer (ess-company-create-doc-buffer arg))
+    (doc-buffer (company-ess-create-doc-buffer arg))
     ;(meta (funcall ess-eldoc-function) )
-    ;(annotation (ess-R-get-typeof arg))
+    ;(annotation (company-ess-get-typeof arg))
     (sorted t) ; get arguments on top of the list
     (duplicates nil)
     ))
-
-
-;(remove-hook 'completion-at-point-functions 'ess-R-object-completion) 
-; FIXME: Is this required ?
 
 
 (provide 'company-ess)
