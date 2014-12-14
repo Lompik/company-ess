@@ -1,6 +1,6 @@
 ;;; company-ess.el --- R/ess Completion Backend for company-mode  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2014  
+;; Copyright (C) 2014
 
 ;; Author:  Lompik
 ;; Keywords: completion, ess
@@ -21,7 +21,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;;; Commentary: R/ess Completion Backend for company-mode
+;;; Commentary:
+;; R/ESS Completion Backend for company-mode
 
 ;;; Code:
 
@@ -32,17 +33,19 @@
 ;;; INTERNALS
 
 (defun company-ess-get-compfromr (symb)
-  "Call R internal completion utilities (rcomp) for possible completions."
+  "Call R internal completion utilities (rcomp) for possible completions.
+Argument SYMB: Symbol to feed R completion."
   (let* ((comm (format ".ess_get_completions(\"%s\", %d)\n"
 		       (ess-quote-special-chars symb)
 		       (length symb))))
     (ess-get-words-from-vector comm)))
 
 (defun company-ess-args (symb)
-  "Get the args of the function when inside parentheses."
+  "Get the args of the function when inside parentheses.
+Argument SYMB: Symbol to feed R completion."
   (when  ess--funname.start ;; stored by a coll to ess-ac-start-args
     (let ((args (nth 2 (ess-function-arguments (car ess--funname.start))))
-          (len (length symb)))    
+          (len (length symb)))
       (delete "..." args)
       (mapcar (lambda (a) (concat a ess-ac-R-argument-suffix))
               args))))
@@ -61,7 +64,7 @@
     comps))
 
 (defun company-ess-start-args () ;Same as ess-ac-start-args
-  "Get initial position for args completion"
+  "Get initial position for args completion."
   (when (and ess-local-process-name
              (not (eq (get-text-property (point) 'face) 'font-lock-string-face)))
     (when (ess--funname.start)
@@ -79,7 +82,8 @@
 
 
 (defun company-ess-get-typeof (symb)
-  "Call R internal completion utilities (typeof) for possible completions."
+  "Call R internal completion utilities (typeof) for possible completions.
+Argument SYMB: Symbol to feed R completion."
   (let* ((comm (format "typeof(%s)\n"
 		       symb)))
     (format " %.3s" (car (ess-get-words-from-vector comm)))))
@@ -93,8 +97,8 @@
 
 ;;;###autoload
 (defun company-ess-backend (command &optional arg &rest ignored)
+  "R/ESS backend for company-mode."
   (interactive (list 'interactive))
-
   (cl-case command
     (interactive (company-begin-backend 'company-ess-backend))
     (prefix (company-ess-start))
