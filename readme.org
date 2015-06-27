@@ -2,6 +2,9 @@
 
 This a tentative support for ESS completion for company-mode, based on the same code used in =ess-r-d.el= for auto-complete.
 
+* Note
+Recent version of ess (i.e. > 15.03) has built-in company-mode support. I have switched to use its backend instead. I also removed this package from [[https://github.com/milkypostman/melpa/pull/2775][melpa]] to avoid confusion.
+
 * Features
   - Complete R objects/args based on =.ess_get_completions= functions defined by ESS
 #+CAPTION: functions conpletion example
@@ -33,7 +36,6 @@ This a tentative support for ESS completion for company-mode, based on the same 
 
 
 #+END_SRC
-
 
 Version history: 
   - <2014-09-17 Wed 21:43> 0.0.1 - Initial release
